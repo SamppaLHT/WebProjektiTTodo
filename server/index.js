@@ -10,7 +10,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
-const openDB = () => {
+const openDb = () => {
     const pool = new Pool({
         user: 'postgres',
         host: 'localhost',
@@ -22,7 +22,7 @@ const openDB = () => {
 }
 
 app.get('/', (req, res) => {
-    const pool = openDB()
+    const pool = openDb()
     pool.query('SELECT * FROM tasks', (err, result) => {
         if (err) {
             return res.status(500).json({error: err.message})
@@ -43,7 +43,7 @@ app.post('/create', (req, res) => {
         return res.status(400).json({error: 'Task is required'})
     }
  
-    pool.query('insert into task (description) values ($1) returning *', [task.description],
+    pool.query('insert into tasks (description) values ($1) returning *', [task.description],
         (err, result) => {
         if (err) {
             return res.status(500).json({error: err.message})
@@ -57,7 +57,7 @@ app.delete('/delete/:id', (req, res) => {
     const { id } = req.params
     
     console.log(`Deleting task with id: ${id}`)
-    pool.query('delete from task WHERE id = $1',
+    pool.query('delete from tasks WHERE id = $1',
         [id], (err, result) => {
         if (err) {
             console.error(err.message)
