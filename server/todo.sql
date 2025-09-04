@@ -1,0 +1,14 @@
+DROP TABLE IF EXISTS tasks CASCADE;
+DROP TABLE IF EXISTS account CASCADE;
+
+CREATE TABLE tasks (
+    id SERIAL PRIMARY KEY,
+    description TEXT NOT NULL
+);
+
+CREATE TABLE account (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password TEXT NOT NULL
+);
+

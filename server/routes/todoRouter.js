@@ -1,5 +1,6 @@
 import { pool } from '../helper/db.js'
 import { Router } from 'express'
+import { auth } from '../helper/auth.js'
 
 const router = Router()
 
@@ -12,7 +13,7 @@ router.get('/', (req, res, next) => {
     })
 })
 
-router.post('/create', (req, res, next) => {
+router.post('/create', auth, (req, res, next) => {
     const { task } = req.body
 
     if (!task) {
