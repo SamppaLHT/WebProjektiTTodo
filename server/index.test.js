@@ -59,20 +59,26 @@ describe("Testing basic database functionality", () => {
 describe("Testing user management", () => {
     
     const user = { email: "foo_login@test.com", password: "password123" }
+
     before(async () => {
         await insertTestUser(user)
     })
     
     it("Should sign up", async () => {
+
+        const uniqueEmail = `test_${Date.now()}@test.com`
+        const signupUser = {
+            email: uniqueEmail, password: "password123"
+        }
         const response = await fetch("http://localhost:3001/user/signup", {
             method: "post",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({ user })
+            body: JSON.stringify({ user: signupUser })
         })
         const data = await response.json()
         expect(response.status).to.equal(201)
         expect(data).to.include.all.keys(["id", "email"])
-        expect(data.email).to.equal(user.email)
+        expect(data.email).to.equal(signupUser.email)
     })
 
     it('should log in', async () => {

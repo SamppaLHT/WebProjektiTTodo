@@ -13,16 +13,22 @@ router.post('/signup', (req, res, next) => {
 
     if (!user || !user.email || !user.password) {
         const error = new Error('Email and password are required')
+        error.status = 400
         return next(error)
     }
 
-    hash(user.password, 10, (err, hashedPassword) => {
+    bcrypt.hash(user.password, 10, (err, hashedPassword) => {
         if (err) return next(err)
 
         pool.query('INSERT INTO account (email, password) VALUES ($1, $2) RETURNING *',
             [user.email, hashedPassword],
             (err, result) => {
                 if (err) {
+                    if (err.code === '23505') {
+                        const error = new Error('Email already exists')
+                        error.status = 409
+                        return next(error)
+                    }
                     return next(err)
                 }
                 res.status(201).json({ id: result.rows[0].id, email: user.email })
