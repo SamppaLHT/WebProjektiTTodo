@@ -4,7 +4,10 @@ import axios from 'axios'
 
 export default function UserProvider({children}) {
     const userFromStorage = sessionStorage.getItem('user')
-    const [user, setUser] = useState(userFromStorage ? JSON.parse(userFromStorage) : {email: ", password:" })
+    const [user, setUser] = useState(
+        userFromStorage
+            ? JSON.parse(userFromStorage)
+            : {email:"", password:"" })
 
     const signUp = async () => {
         const headers = {headers: {'Content-Type': 'application/json'}}
