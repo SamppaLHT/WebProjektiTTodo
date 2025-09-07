@@ -1,40 +1,12 @@
 import { pool } from '../helper/db.js'
 import { Router } from 'express'
 import { auth } from '../helper/auth.js'
+import { getTasks, postTask } from '../controllers/TaskController.js'
 
 const router = Router()
 
-router.get('/', (req, res, next) => {
-    pool.query('SELECT * FROM tasks', (err, result) => {
-        if (err) {
-            return next(err)
-        }
-        res.status(200).json(result.rows)
-    })
-})
-
-router.post('/create', auth, (req, res, next) => {
-    const { task } = req.body
-
-    if (!task) {
-        const error = new Error('Task is required')
-        error.status = 400
-        return next(error)
-    }
- 
-    pool.query(
-        'INSERT INTO tasks (description) VALUES ($1) RETURNING *', 
-        [task.description],
-        (err, result) => {
-        if (err) {
-            return next(err)
-        }
-        res.status(201).json({
-            id: result.rows[0].id, 
-            description: task.description,
-        })
-    })
-})
+router.get('/', getTasks)
+router.post('/create', auth, postTask)
 
 router.delete('/delete/:id', (req, res, next) => {
     const { id } = req.params
