@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { UserContext } from './UserContext'
+import { UserContext } from './UserContext.jsx'
 import axios from 'axios'
 
 export default function UserProvider({children}) {
@@ -7,12 +7,12 @@ export default function UserProvider({children}) {
     const [user, setUser] = useState(
         userFromStorage
             ? JSON.parse(userFromStorage)
-            : {email:"", password:"" })
+            : {email:'', password:'' })
 
     const signUp = async () => {
         const headers = {headers: {'Content-Type': 'application/json'}}
         await axios.post(`${import.meta.env.VITE_API_URL}/user/signup`, JSON.stringify({user: user}), headers)
-        setUser({email: ", password: "})
+        setUser({email: "", password: ""})
     }
 
     const signIn = async () => {

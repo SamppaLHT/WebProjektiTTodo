@@ -10,11 +10,7 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: false}))
 
-app.use('/', todoRouter)
-app.use('/user', userRouter)
-
-app.listen(port)
-
+// Error handling middleware should be before routes
 app.use((err, req ,res, next) => {
     const statusCode = err.status || 500
     res.status(statusCode).json({
@@ -23,4 +19,11 @@ app.use((err, req ,res, next) => {
             status: statusCode
         }
     })
+})
+
+app.use('/user', userRouter)  // Mount auth routes first
+app.use('/', todoRouter)      // Then mount todo routes
+
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`)
 })
